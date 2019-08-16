@@ -3,6 +3,8 @@
            https://api.github.com/users/<your name>
 */
 
+
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -45,6 +47,73 @@ const followersArray = [];
 </div>
 
 */
+const createNewCard = githubResponse => {
+  const userData = githubResponse.data;
+  console.log(userData);
+
+  const card = document.createElement('div');
+  const pic = document.createElement('img');
+  const info = document.createElement('div');
+  const name = document.createElement('h3');
+  const username = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+  card.classList.add('card');
+  info.classList.add('card-info');
+  name.classList.add('name');
+  username.classList.add('username');
+
+  pic.src = userData.avatar_url;
+  name.textContent = userData.name;
+  username.textContent = userData.login;
+  location.textContent = `Location: ${userData.location}`;
+  profileLink.setAttribute('href', userData.html_url);
+  profileLink.textContent = userData.html_url;
+  followers.textContent = `Followers: ${userData.followers}`;
+  following.textContent = `Following: ${userData.following}`;
+  bio.textContent = `Bio: ${userData.bio}`;
+
+  card.appendChild(pic);
+  card.appendChild(info);
+  info.appendChild(name);
+  info.appendChild(username);
+  info.appendChild(location);
+  info.appendChild(profile);
+  profile.appendChild(profileLink);
+  info.appendChild(followers);
+  info.appendChild(following);
+  info.appendChild(bio);
+
+  return card;
+}
+
+const getUserData = username => {
+  return axios.get(`http://api.github.com/users/${username}`);
+}
+
+const addCardToPage = card => {
+  const cards = document.querySelector('.cards');
+  cards.appendChild(card);
+}
+
+const logError = error => {
+  console.log(error);
+}
+
+const users = ['kevcarr11', 'tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+const cards = document.querySelector('.cards');
+
+users.map(user => {
+  getUserData(user)
+    .then(createNewCard, logError)
+    .then(addCardToPage, logError);
+})
+
 
 /* List of LS Instructors Github username's: 
   tetondan
